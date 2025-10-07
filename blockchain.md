@@ -66,3 +66,42 @@ Musharakah (joint venture)
 শরিয়াহ কমপ্লায়েন্স (Compliance)	নিয়ম ভঙ্গের সুযোগ কম
 অডিট সহজতা (Auditability)	সব লেনদেন যাচাইযোগ্য
 
+
+⚙️ ৪️⃣ একটি সাধারণ উদাহরণ (Coding ধারণা)
+ধরা যাক আমরা Python ও Ethereum-এর smart contract (Solidity) ব্যবহার করছি।
+
+pragma solidity ^0.8.0;
+
+contract MurabahaContract {
+    address public bank;
+    address public client;
+    uint public costPrice;
+    uint public profitMargin;
+    bool public productDelivered;
+
+    constructor(address _client, uint _costPrice, uint _profitMargin) {
+        bank = msg.sender;
+        client = _client;
+        costPrice = _costPrice;
+        profitMargin = _profitMargin;
+        productDelivered = false;
+    }
+
+    function deliverProduct() public {
+        require(msg.sender == bank, "Only bank can deliver");
+        productDelivered = true;
+    }
+
+    function payMurabaha() public payable {
+        require(productDelivered, "Product not delivered");
+        uint totalPrice = costPrice + profitMargin;
+        require(msg.value == totalPrice, "Incorrect payment");
+        payable(bank).transfer(msg.value);
+    }
+}
+
+
+🧠 এখানে কী হচ্ছে:
+ব্যাংক ও গ্রাহক চুক্তিবদ্ধ।
+ব্যাংক পণ্য সরবরাহ করলে গ্রাহক পেমেন্ট দেয়।
+পুরো লেনদেন শরিয়াহ নিয়ম অনুযায়ী blockchain-এ রেকর্ড হয়।
